@@ -43,7 +43,7 @@ var s = function(p) {
   var start;
   var end;
   var boxSize = 10;
-  var space = 10;
+  var space = 5;
   var path = [];
 
   p.windowResized = function() {
@@ -91,11 +91,13 @@ var s = function(p) {
       }
 
       p.box(boxSize);
+
+
       if (p.frameCount % 20 ==0 || p.frameCount % 21 ==0 || p.frameCount % 22 ==0) {
         p.rotate(Math.sin(p.frameCount/100000)+Math.cos(-p.frameCount/100000));
       }
-      if (p.frameCount % 44 ==0 || p.frameCount % 45 ==0 || p.frameCount % 46 ==0 || p.frameCount % 47 ==0 ||p.frameCount % 48 ==0){
-        p.rotate(Math.tan(p.frameCount/100000)-Math.cos(-p.frameCount/100000));
+      if (p.frameCount % 60 ==0 || p.frameCount % 45 ==0 || p.frameCount % 46 ==0 || p.frameCount % 47 ==0 ||p.frameCount % 48 ==0){
+        p.rotate(Math.sin(p.frameCount/100000)-Math.cos(-p.frameCount/100000));
       }
     }
     this.setCol = function(col){
@@ -227,6 +229,7 @@ var s = function(p) {
           }else {
             neighbor.g = tempG;
             openSet.push(neighbor);
+            window.max.outlet('bd', 0);
           }
           neighbor.h = p.heuristic(neighbor, end);
           neighbor.f = neighbor.g + neighbor.h;
@@ -239,12 +242,17 @@ var s = function(p) {
     }
     p.stroke(stroke_r,stroke_b, stroke_g);
     p.rotateY(p.frameCount/80);
+    p.rotateX(p.frameCount/1500);
     p.translate(0,150,0)
     for (var i = 0; i < cols; i++){
-      p.translate(boxSize*2,-cols*2*boxSize,0);
-      p.rotateX(p.frameCount/1500);
+      p.translate((boxSize+space),-cols*(space+boxSize),0);
+      if (p.mouseIsPressed)
+      {
+        p.rotateX(p.frameCount/1500);
+      }
+
       for (var j = 0; j < rows; j++){
-          p.translate(0,boxSize*2,0);
+          p.translate(0,boxSize+space,0);
           grid[i][j].show();
       }
     }
