@@ -1,5 +1,5 @@
 // AUTHOR: Morgan Visnesky
-// DATE: 11/20/2020
+// DATE: 11/28/2020
 // FILENAME: sketch2.js
 //
 // **********************         DESCRIPTION         *************************
@@ -45,6 +45,7 @@ var s = function(p) {
   var boxSize = 10;
   var space = 5;
   var path = [];
+  var sounds = ['sound0','sound1','sound2','sound3','sound4']
 
   p.windowResized = function() {
     p.resizeCanvas(innerWidth, innerHeight, this.WEBGL);
@@ -93,11 +94,16 @@ var s = function(p) {
       p.box(boxSize);
 
 
-      if (p.frameCount % 20 ==0 || p.frameCount % 21 ==0 || p.frameCount % 22 ==0) {
+      if (p.frameCount % 20 ==0 || p.frameCount % 21 ==0 || p.frameCount % 22 ==0 || p.frameCount % 23 ==0) {
         p.rotate(Math.sin(p.frameCount/100000)+Math.cos(-p.frameCount/100000));
+        if (p.frameCount % 100 ==0){
+          window.max.outlet('hh', 0);
+        }
+
       }
       if (p.frameCount % 60 ==0 || p.frameCount % 45 ==0 || p.frameCount % 46 ==0 || p.frameCount % 47 ==0 ||p.frameCount % 48 ==0){
         p.rotate(Math.sin(p.frameCount/100000)-Math.cos(-p.frameCount/100000));
+        //window.max.outlet('glitch', 0);
       }
     }
     this.setCol = function(col){
@@ -109,22 +115,26 @@ var s = function(p) {
       var j = this.j;
       if (i < cols-1){
         this.neighbors.push(grid[i+1][j]);
+
       }
       if (i > 0){
         this.neighbors.push(grid[i-1][j]);
+
       }
       if ( j < rows-1){
         this.neighbors.push(grid[i][j+1]);
+
       }
       if (j > 0){
         this.neighbors.push(grid[i][j-1]);
+
       }
     }
   }
 
 
   p.setup = function() {
-    p.frameRate(10)
+    p.frameRate(2)
     p.createCanvas(innerWidth, innerHeight, this.WEBGL);
     if(maxIsDetected) {
       // remove unwanted scroll bar
@@ -179,6 +189,7 @@ var s = function(p) {
     for (var i = 0; i < cols; i++){
       for (var j = 0; j < rows; j++){
         grid[i][j].addNeighbors(grid);
+
       }
     }
 
@@ -195,7 +206,7 @@ var s = function(p) {
   p.draw = function() {
     if(opaqueFlag) {
       if(p.mouseIsPressed){
-        p.background(25, 20, 20);
+        p.background(background_r-100, background_g-20, background_b-20);
         p.rotateX(-30*Math.cos(p.mouseX/100), -30*Math.sin(p.mouseY/100));
         p.rotateY(-30*Math.cos(p.mouseX/100), -30*Math.sin(p.mouseY/100));
       }
@@ -219,8 +230,13 @@ var s = function(p) {
 
       var neighbors = current.neighbors;
       for ( var i = 0; i < neighbors.length; i++){
+        if (neighbors[i].wall){
+          window.max.outlet('bd', 0);
+        }
         var neighbor = neighbors[i];
+
         if (!closedSet.includes(neighbor) && !neighbor.wall){
+
           var tempG = current.g + 1;
           if (openSet.includes(neighbor)){
             if (tempG < neighbor.g){
@@ -229,7 +245,7 @@ var s = function(p) {
           }else {
             neighbor.g = tempG;
             openSet.push(neighbor);
-            window.max.outlet('bd', 0);
+            window.max.outlet('glitch2', 0);
           }
           neighbor.h = p.heuristic(neighbor, end);
           neighbor.f = neighbor.g + neighbor.h;
@@ -248,12 +264,28 @@ var s = function(p) {
       p.translate((boxSize+space),-cols*(space+boxSize),0);
       if (p.mouseIsPressed)
       {
+        if (p.mouseX < innerWidth/2){
+          p.frameRate(10);
+        }
+        else{
+          p.frameRate(20);
+        }
+
         p.rotateX(p.frameCount/1500);
+        if (i%10==0){
+          window.max.outlet('glitch', 0);
+        }
+
+      }
+      else {
+        p.frameRate(2);
       }
 
       for (var j = 0; j < rows; j++){
           p.translate(0,boxSize+space,0);
           grid[i][j].show();
+
+
       }
     }
 

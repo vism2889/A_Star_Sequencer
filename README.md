@@ -6,7 +6,15 @@
 
 ## Functionality
 
-| Input Messages | Output Messages |   
+| Input Messages | Description |   
+| :------------- | :----------: |   
+| set_stroke_color | Takes 3 arguments representing RGB values between 0-255 that set the stroke or 'outline' color of the 3D grid. |  
+| set_background_color | Takes 3 arguments representing RGB values between 0-255 that set the background color of the 3D space. |
+
+
+<br/>
+
+| Output Messages | Description  |   
 | :------------- | :----------: |   
 | set_stroke_color | output |  
 | set_background_color | output | 
